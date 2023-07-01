@@ -1,5 +1,7 @@
 package idv.kuan.databases;
 
+import android.content.Context;
+
 import java.sql.Connection;
 
 import idv.kuan.flashcard4.connection.AndroidDBConnection;
@@ -11,6 +13,8 @@ public class DBFactory {
 
     private static String source = DEFAULT;
     private static String commands[];
+
+    public static Context context;//這裡context 取得先寫死
 
     public static void config(String provider) {
         config(provider,null);
@@ -26,7 +30,7 @@ public class DBFactory {
             case DEFAULT:
                 return new DefaultDBConnection().getConnection(commands);
             case ANDROID:
-                return new AndroidDBConnection().getConnection(commands);
+                return new AndroidDBConnection(context).getConnection(commands);
             default:
                 return null;
         }

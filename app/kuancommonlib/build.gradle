@@ -3,10 +3,10 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
-        applicationId "idv.kuan.flashcard4"
+        applicationId "idv.kuan.kuancommonlib"
         minSdk 23
         targetSdk 32
         versionCode 1
@@ -31,13 +31,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'org.sqldroid:sqldroid:1.0.3'
-
-    implementation project(':common')
-    implementation project(':app:androidlib')
-
 }
