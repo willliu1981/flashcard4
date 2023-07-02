@@ -1,4 +1,5 @@
-package idv.kuan.flashcard4.connection;
+package idv.kuan.kuanandroidlibs.databases.provider;
+
 
 import android.content.Context;
 import android.widget.Toast;
@@ -12,16 +13,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import idv.kuan.databases.DBConnection;
+import idv.kuan.libs.databases.BaseDBFactory;
 
-public class AndroidDBConnection extends DBConnection {
-    public static String TargetDBName = "fc4.db";
-    private static final String DBNameInAssets = "fc4.db";
+
+public class AndroidDBFactory extends BaseDBFactory {
+    public static String TargetDBName = "test.db";
+    private static final String DBNameInAssets = "test.db";
 
     private static Context context;
 
-    public AndroidDBConnection(Context context) {
-        AndroidDBConnection.context = context;
+
+
+    public AndroidDBFactory(Context context) {
+        AndroidDBFactory.context = context;
     }
 
     @Override
@@ -84,7 +88,7 @@ public class AndroidDBConnection extends DBConnection {
             }
         } else {
             Toast.makeText(context, "db is exists:", Toast.LENGTH_SHORT).show();
-            System.out.println("xxx ADBConn :db is exists:"+file.getAbsolutePath());
+            //System.out.println("xxx ADBConn :db is exists:"+file.getAbsolutePath());
         }
         return file.getAbsolutePath();
 
