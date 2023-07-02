@@ -3,22 +3,15 @@ package idv.kuan.flashcard4;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import idv.kuan.androidlib.databases.provider.AndroidDBFactory;
-import idv.kuan.databases.DBFactory;
 import idv.kuan.flashcard4.dao.FlashcardDao;
 import idv.kuan.flashcard4.databases.models.Flashcard;
+import idv.kuan.kuanandroidlibs.databases.provider.AndroidDBFactory;
 import idv.kuan.libs.databases.DBFactoryCreator;
-import idv.kuan.libs.databases.daos.CommonDao;
-import idv.kuan.libs.databases.models.CommonEntity;
 import idv.kuan.libs.databases.utils.TableSchemaModifier;
 
 public class MainActivity extends AppCompatActivity {

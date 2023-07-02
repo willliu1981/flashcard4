@@ -1,4 +1,4 @@
-package idv.kuan.kuancommonlib;
+package idv.kuan.kuanandroidlibs;
 
 import org.junit.Test;
 

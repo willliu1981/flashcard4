@@ -1,4 +1,4 @@
-package idv.kuan.kuancommonlib;
+package idv.kuan.kuanandroidlibs;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("idv.kuan.kuancommonlib", appContext.getPackageName());
+        assertEquals("idv.kuan.kuanandroidlib.test", appContext.getPackageName());
     }
 }

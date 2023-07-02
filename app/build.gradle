@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.sqldroid:sqldroid:1.0.3'
 
     implementation project(':common')
-    implementation project(':app:androidlib')
+    implementation project(':kuanandroidlibs')
+
 
 }
