@@ -1,15 +1,21 @@
 package idv.kuan.libs.databases.daos;
 
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import idv.kuan.libs.databases.DBFactoryCreator;
 import idv.kuan.libs.databases.models.CommonEntity;
 import idv.kuan.libs.databases.utils.QueryBuilder;
 
-public abstract class CommonDao<T extends CommonEntity> implements Dao<CommonEntity> {
+public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEntity> {
+
 
     /**
      * 注意:connection 是從DBFactoryCreator取得預設factory的connection
@@ -26,7 +32,7 @@ public abstract class CommonDao<T extends CommonEntity> implements Dao<CommonEnt
         Connection connection = DBFactoryCreator.getFactory().getConnection();
 
         QueryBuilder builder = new QueryBuilder();
-        populateBuilderWithEntityProperties(builder, (T) entity);
+        populateBuilderWithEntityProperties(builder, (V) entity);
 
         String query = null;
 
@@ -44,6 +50,7 @@ public abstract class CommonDao<T extends CommonEntity> implements Dao<CommonEnt
 
 
     }
+
 
     /**
      * 會執行createOrUpdateEntity方法
@@ -75,7 +82,7 @@ public abstract class CommonDao<T extends CommonEntity> implements Dao<CommonEnt
      * @param builder
      * @param entity
      */
-    protected abstract void populateBuilderWithEntityProperties(QueryBuilder builder, T entity);
+    protected abstract void populateBuilderWithEntityProperties(QueryBuilder builder, V entity);
 
     protected abstract String getTableName();
 

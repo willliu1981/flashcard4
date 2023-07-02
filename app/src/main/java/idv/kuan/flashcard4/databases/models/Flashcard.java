@@ -45,7 +45,12 @@ public class Flashcard implements CommonEntity {
     }
 
     public void setAtCreated(String atCreated) {
-        setAtCreated(Timestamp.valueOf(atCreated));
+        try {
+            setAtCreated(Timestamp.valueOf(atCreated));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Timestamp getAtUpdated() {
@@ -57,7 +62,13 @@ public class Flashcard implements CommonEntity {
     }
 
     public void setAtUpdated(String atUpdated) {
-        setAtUpdated(Timestamp.valueOf(atUpdated));
+
+        try {
+            setAtUpdated(Timestamp.valueOf(atUpdated));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

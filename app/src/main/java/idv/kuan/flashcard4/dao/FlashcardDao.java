@@ -1,16 +1,62 @@
 package idv.kuan.flashcard4.dao;
 
 
-import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import idv.kuan.flashcard4.databases.models.Flashcard;
+import idv.kuan.libs.databases.DBFactoryCreator;
 import idv.kuan.libs.databases.daos.CommonDao;
 import idv.kuan.libs.databases.models.CommonEntity;
 import idv.kuan.libs.databases.utils.QueryBuilder;
 
 public class FlashcardDao extends CommonDao<Flashcard> {
+
+    @Override
+    public <U> U findByIDOrAll(CommonEntity entity) throws SQLException {
+        if (entity == null) {
+            throw new SQLException("entity is null");
+        }
+        Connection connection = DBFactoryCreator.getFactory().getConnection();
+        String sqlQuery = "select * from " + getTableName();
+        PreparedStatement preparedStatement = null;
+        if (entity.getId() == null) {
+            preparedStatement = connection.prepareStatement(sqlQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Flashcard> list = new ArrayList<>();
+            Flashcard flashcard = null;
+            while (resultSet.next()) {
+                flashcard = new Flashcard();
+                mapResultSetToEntity(flashcard, resultSet);
+                list.add(flashcard);
+            }
+
+            return (U) list;
+
+        } else {
+            preparedStatement = connection.prepareStatement(sqlQuery + " where id=?");
+            preparedStatement.setInt(1, entity.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Flashcard flashcard = new Flashcard();
+            if (resultSet.next()) {
+                mapResultSetToEntity(flashcard, resultSet);
+            }
+            return (U) flashcard;
+        }
+    }
+
+
+    protected void mapResultSetToEntity(Flashcard entity, ResultSet resultSet) throws SQLException {
+        entity.setId(resultSet.getInt("id"));
+        entity.setTerm(resultSet.getString("term"));
+        entity.setTranslation(resultSet.getString("translation"));
+        entity.setAtCreated(resultSet.getString("at_created"));
+        entity.setAtUpdated(resultSet.getString("at_updated"));
+    }
 
     @Override
     protected void populateBuilderWithEntityProperties(QueryBuilder builder, Flashcard entity) {
@@ -23,6 +69,7 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
     }
 
+
     @Override
     protected String getTableName() {
         return "flashcards";
@@ -30,10 +77,9 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
 
     @Override
-    public CommonEntity findById(Serializable id) throws SQLException {
-        return null;
+    public Flashcard findById(CommonEntity entity) throws SQLException {
+        return this.findByIDOrAll(entity);
     }
-
 
     @Override
     public void delete(CommonEntity entity) throws SQLException {
@@ -42,6 +88,8 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
     @Override
     public List<CommonEntity> findAll() throws SQLException {
-        return null;
+        return this.findByIDOrAll(new Flashcard());
     }
+
+
 }
