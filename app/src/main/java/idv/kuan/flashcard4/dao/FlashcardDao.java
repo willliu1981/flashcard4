@@ -16,8 +16,9 @@ import idv.kuan.libs.databases.utils.QueryBuilder;
 
 public class FlashcardDao extends CommonDao<Flashcard> {
 
+
     @Override
-    public <U> U findByIDOrAll(CommonEntity entity) throws SQLException {
+    public <U> U findByIDOrAll(Flashcard entity) throws SQLException {
         if (entity == null) {
             throw new SQLException("entity is null");
         }
@@ -50,6 +51,8 @@ public class FlashcardDao extends CommonDao<Flashcard> {
     }
 
 
+
+
     protected void mapResultSetToEntity(Flashcard entity, ResultSet resultSet) throws SQLException {
         entity.setId(resultSet.getInt("id"));
         entity.setTerm(resultSet.getString("term"));
@@ -77,17 +80,17 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
 
     @Override
-    public Flashcard findById(CommonEntity entity) throws SQLException {
+    public Flashcard findById(Flashcard entity) throws SQLException {
         return this.findByIDOrAll(entity);
     }
 
     @Override
-    public void delete(CommonEntity entity) throws SQLException {
+    public void delete(Flashcard entity) throws SQLException {
 
     }
 
     @Override
-    public List<CommonEntity> findAll() throws SQLException {
+    public ArrayList<Flashcard> findAll() throws SQLException {
         return this.findByIDOrAll(new Flashcard());
     }
 

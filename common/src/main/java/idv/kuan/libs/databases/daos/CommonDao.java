@@ -14,7 +14,9 @@ import idv.kuan.libs.databases.DBFactoryCreator;
 import idv.kuan.libs.databases.models.CommonEntity;
 import idv.kuan.libs.databases.utils.QueryBuilder;
 
-public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEntity> {
+public abstract class CommonDao<V extends CommonEntity> implements Dao<V> {
+
+
 
 
     /**
@@ -24,7 +26,7 @@ public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEnt
      * @throws SQLException
      */
     @Override
-    public void createOrUpdateEntity(CommonEntity entity) throws SQLException {
+    public void createOrUpdateEntity(V entity) throws SQLException {
         if (entity == null) {
             throw new SQLException("entity is null");
         }
@@ -32,7 +34,7 @@ public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEnt
         Connection connection = DBFactoryCreator.getFactory().getConnection();
 
         QueryBuilder builder = new QueryBuilder();
-        populateBuilderWithEntityProperties(builder, (V) entity);
+        populateBuilderWithEntityProperties(builder, entity);
 
         String query = null;
 
@@ -59,7 +61,7 @@ public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEnt
      * @throws SQLException
      */
     @Override
-    public void create(CommonEntity entity) throws SQLException {
+    public void create(V entity) throws SQLException {
         this.createOrUpdateEntity(entity);
     }
 
@@ -70,7 +72,7 @@ public abstract class CommonDao<V extends CommonEntity> implements Dao<CommonEnt
      * @throws SQLException
      */
     @Override
-    public void update(CommonEntity entity) throws SQLException {
+    public void update(V entity) throws SQLException {
         this.createOrUpdateEntity(entity);
     }
 

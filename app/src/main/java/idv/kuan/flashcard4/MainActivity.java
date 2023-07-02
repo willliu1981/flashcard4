@@ -17,6 +17,7 @@ import idv.kuan.databases.DBFactory;
 import idv.kuan.flashcard4.dao.FlashcardDao;
 import idv.kuan.flashcard4.databases.models.Flashcard;
 import idv.kuan.libs.databases.DBFactoryCreator;
+import idv.kuan.libs.databases.daos.CommonDao;
 import idv.kuan.libs.databases.models.CommonEntity;
 import idv.kuan.libs.databases.utils.TableSchemaModifier;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         DBFactoryCreator.getFactory(new AndroidDBFactory(this)).config("android1", "fc4.db", "fc4.db");
 
@@ -58,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private void testCreate() {
         FlashcardDao dao = new FlashcardDao();
         Flashcard flashcard = new Flashcard();
-        flashcard.setTerm("apple2");
-        flashcard.setTranslation("蘋果2");
+        int rnd = ((int) (Math.random() * 1000));
+        flashcard.setTerm("apple" + rnd);
+        flashcard.setTranslation("蘋果" + rnd);
         flashcard.setAtCreated("2023-07-02 23:12:22");
         flashcard.setAtUpdated("2023-07-02 23:12:22");
         try {
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         Flashcard flashcard = new Flashcard();
         flashcard.setId(3);
         Flashcard byId = null;
-        List<CommonEntity> list = new ArrayList<>();
+        List<Flashcard> list = new ArrayList<>();
         try {
             byId = dao.findById(flashcard);
 
@@ -88,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("xxx MA list:" + list.size());
 
-        for (CommonEntity f : list) {
-            System.out.println("xxx MA element:" + f);
+        for (Flashcard f : list) {
+
+            System.out.println("xxx MA element:" + f.getTerm() + ", item=" + f);
 
         }
         System.out.println("xxx MA byId:" + byId);
     }
-
 
 
 }
