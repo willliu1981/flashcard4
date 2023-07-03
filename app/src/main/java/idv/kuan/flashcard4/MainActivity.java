@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,37 @@ public class MainActivity extends AppCompatActivity {
 
 
         //changeTableStructure();
+        createNewStructure();
 
-        //*
+        /*
         testCreate();
         testQuery();
 
 
         //*/
+
+    }
+
+    private void createNewStructure() {
+        String sql = "CREATE TABLE \"flashcard_set\" (" +
+                "\"id\"INTEGER NOT NULL UNIQUE," +
+                "\"name\"TEXT NOT NULL UNIQUE," +
+                "\"last_review_time\"TEXT," +
+                "\"review_level\"INTEGER NOT NULL DEFAULT 0," +
+                "\"at_created\"TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "\"at_updated\"TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY(\"id\" AUTOINCREMENT)" +
+                ")";
+
+
+        try {
+            PreparedStatement preparedStatement = DBFactoryCreator.getFactory().getConnection().prepareStatement(sql);
+            boolean execute = preparedStatement.execute();
+
+            System.out.println("xxx MA:create ok? " + execute);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
