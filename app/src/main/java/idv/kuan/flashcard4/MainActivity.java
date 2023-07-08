@@ -15,6 +15,7 @@ import idv.kuan.kuanandroidlibs.databases.provider.AndroidDBFactory;
 import idv.kuan.libs.databases.DBFactoryCreator;
 import idv.kuan.libs.databases.utils.TableSchemaModifier;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -27,12 +28,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         //changeTableStructure();
-        createNewStructure();
+        //createNewStructure();
 
         /*
         testCreate();
         testQuery();
 
+
+        //*/
+
+
+
+
+        //*
+        String s = DBFactoryCreator.testMsg();
+        System.out.println("xxx MA: msg=" + s);
 
         //*/
 

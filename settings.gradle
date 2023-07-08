@@ -14,5 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Flashcard4"
 include ':app'
-include ':common'
 include ':kuanandroidlibs'
+project(':kuanandroidlibs').projectDir = new File('../Kuanlibs/kuanandroidlibs')
+
+include ':common'
+project(':common').projectDir = new File('../Kuanlibs/common')
