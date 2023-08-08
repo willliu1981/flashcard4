@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +58,32 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void changeTableStructure(int appVersion) {
-        String sql = "CREATE TABLE \"flashcard\" (  " +
-                "  \"id\"  INTEGER NOT NULL UNIQUE,  " +
-                "  \"term\"  TEXT NOT NULL,  " +
-                "  \"translation\"  TEXT NOT NULL DEFAULT 'def5',  " +
-                "  \"at_created\"  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,  " +
-                "  \"at_updated\"  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,  " +
-                "  PRIMARY KEY(\"id\" AUTOINCREMENT)  " +
+        String sql = "CREATE TABLE \"flashcard\" (   " +
+                "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
+                "   \"term\"   TEXT NOT NULL,   " +
+                "   \"translation\"   TEXT NOT NULL,   " +
+                "   \"at_created\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   \"at_updated\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   PRIMARY KEY(\"id\" AUTOINCREMENT)   " +
+                ")";
+
+        String sq2 = "CREATE TABLE \"flashcard_bundle\" (   " +
+                "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
+                "   \"name\"   TEXT NOT NULL UNIQUE,   " +
+                "   \"last_review_time\"   TEXT,   " +
+                "   \"review_level\"   INTEGER NOT NULL DEFAULT 0,   " +
+                "   \"at_created\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   \"at_updated\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   PRIMARY KEY(\"id\" AUTOINCREMENT)   " +
                 ")";
 
         Connection connection = DBFactoryCreator.getFactory().getConnection();
+        
         TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
                 appVersion, "flashcard", sql);
+
+        TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
+                appVersion, "flashcard_bundle", sq2);
 
         TableSchemaModifier.updateDBVersion(connection, appVersion);
 

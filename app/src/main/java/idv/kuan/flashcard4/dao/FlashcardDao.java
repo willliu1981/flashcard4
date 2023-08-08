@@ -19,43 +19,8 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
     @Override
     protected Flashcard createNewEntity() {
-        return null;
+        return new Flashcard();
     }
-
-    @Override
-    public <U> U findByIDOrAll(Flashcard entity) throws SQLException {
-        if (entity == null) {
-            throw new SQLException("entity is null");
-        }
-        Connection connection = DBFactoryCreator.getFactory().getConnection();
-        String sqlQuery = "select * from " + getTableName();
-        PreparedStatement preparedStatement = null;
-        if (entity.getId() == null) {
-            preparedStatement = connection.prepareStatement(sqlQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            ArrayList<Flashcard> list = new ArrayList<>();
-            Flashcard flashcard = null;
-            while (resultSet.next()) {
-                flashcard = new Flashcard();
-                mapResultSetToEntity(flashcard, resultSet);
-                list.add(flashcard);
-            }
-
-            return (U) list;
-
-        } else {
-            preparedStatement = connection.prepareStatement(sqlQuery + " where id=?");
-            preparedStatement.setInt(1, entity.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Flashcard flashcard = new Flashcard();
-            if (resultSet.next()) {
-                mapResultSetToEntity(flashcard, resultSet);
-            }
-            return (U) flashcard;
-        }
-    }
-
-
 
 
     protected void mapResultSetToEntity(Flashcard entity, ResultSet resultSet) throws SQLException {
