@@ -18,6 +18,11 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
 
     @Override
+    protected Flashcard createNewEntity() {
+        return null;
+    }
+
+    @Override
     public <U> U findByIDOrAll(Flashcard entity) throws SQLException {
         if (entity == null) {
             throw new SQLException("entity is null");
@@ -75,7 +80,7 @@ public class FlashcardDao extends CommonDao<Flashcard> {
 
     @Override
     protected String getTableName() {
-        return "flashcards";
+        return "flashcard";
     }
 
 

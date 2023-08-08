@@ -2,8 +2,12 @@ package idv.kuan.flashcard4;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,10 +31,24 @@ public class MainActivity extends AppCompatActivity {
         DBFactoryCreator.getFactory(new AndroidDBFactory(this)).config("android1", "fc4.db", "fc4.db");
 
 
+        PackageManager packageManager = getPackageManager();
+        int versionCode = -4;
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        changeTableStructure(versionCode);
+
+
         //changeTableStructure();
         //createNewStructure();
 
-        /*
+        //*
         testCreate();
         testQuery();
 
@@ -38,51 +56,26 @@ public class MainActivity extends AppCompatActivity {
         //*/
 
 
-
-
-        //*
-        String s = DBFactoryCreator.testMsg();
-        System.out.println("xxx MA: msg=" + s);
-
-        //*/
-
     }
 
-    private void createNewStructure() {
-        String sql = "CREATE TABLE \"flashcard_set\" (" +
-                "\"id\"INTEGER NOT NULL UNIQUE," +
-                "\"name\"TEXT NOT NULL UNIQUE," +
-                "\"last_review_time\"TEXT," +
-                "\"review_level\"INTEGER NOT NULL DEFAULT 0," +
-                "\"at_created\"TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                "\"at_updated\"TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                "PRIMARY KEY(\"id\" AUTOINCREMENT)" +
+
+    private void changeTableStructure(int appVersion) {
+        String sql = "CREATE TABLE \"flashcard\" (  " +
+                "  \"id\"  INTEGER NOT NULL UNIQUE,  " +
+                "  \"term\"  TEXT NOT NULL,  " +
+                "  \"translation\"  TEXT NOT NULL DEFAULT 'def5',  " +
+                "  \"at_created\"  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,  " +
+                "  \"at_updated\"  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,  " +
+                "  PRIMARY KEY(\"id\" AUTOINCREMENT)  " +
                 ")";
 
+        Connection connection = DBFactoryCreator.getFactory().getConnection();
+        TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
+                appVersion, "flashcard", sql);
 
-        try {
-            PreparedStatement preparedStatement = DBFactoryCreator.getFactory().getConnection().prepareStatement(sql);
-            boolean execute = preparedStatement.execute();
+        TableSchemaModifier.updateDBVersion(connection, appVersion);
 
-            System.out.println("xxx MA:create ok? " + execute);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
-
-    private void changeTableStructure() {
-        String sql = "CREATE TABLE \"flashcards\" (" +
-                "\"id\"INTEGER NOT NULL UNIQUE," +
-                "\"term\"TEXT NOT NULL," +
-                "\"translation\"TEXT NOT NULL," +
-                "\"at_created\"TEXT NOT NULL," +
-                "\"at_updated\"TEXT NOT NULL," +
-                "PRIMARY KEY(\"id\" AUTOINCREMENT)" +
-                ")";
-
-        TableSchemaModifier.evolveTableStructure(DBFactoryCreator.getFactory().getConnection(),
-                "flashcards", "flashcards", sql);
     }
 
     private void testCreate() {
@@ -90,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         Flashcard flashcard = new Flashcard();
         int rnd = ((int) (Math.random() * 1000));
         flashcard.setTerm("apple" + rnd);
-        flashcard.setTranslation("蘋果" + rnd);
+        //flashcard.setTranslation("蘋果" + rnd);
         flashcard.setAtCreated("2023-07-02 23:12:22");
         flashcard.setAtUpdated("2023-07-02 23:12:22");
         try {
@@ -121,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (Flashcard f : list) {
 
-            System.out.println("xxx MA element:" + f.getTerm() + ", item=" + f);
+            System.out.println("xxx MA element:" + f.getTerm() + ", item=" + f + " , transation=" + f.getTranslation());
 
         }
         System.out.println("xxx MA byId:" + byId);
