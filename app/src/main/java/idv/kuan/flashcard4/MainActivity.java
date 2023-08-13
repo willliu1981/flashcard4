@@ -58,16 +58,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void changeTableStructure(int appVersion) {
-        String sql = "CREATE TABLE \"flashcard\" (   " +
-                "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
-                "   \"term\"   TEXT NOT NULL,   " +
-                "   \"translation\"   TEXT NOT NULL,   " +
-                "   \"at_created\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
-                "   \"at_updated\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
-                "   PRIMARY KEY(\"id\" AUTOINCREMENT)   " +
+        Connection connection = DBFactoryCreator.getFactory().getConnection();
+
+        String sql = "CREATE TABLE \"flashcard\" ( " +
+                " \"id\" INTEGER NOT NULL UNIQUE, " +
+                " \"term\" TEXT NOT NULL, " +
+                " \"translation\" TEXT NOT NULL, " +
+                " \"phonetic_notation\" TEXT, " +
+                " \"sound_id\" INTEGER, " +
+                " \"at_created\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                " \"at_updated\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                "\"test\" INTEGER, " +
+                "\"test2\" INTEGER, " +
+                "\"test3\" INTEGER NOT NULL DEFAULT 0, " +
+                "\"test4\" INTEGER NOT NULL DEFAULT 0, " +
+                " PRIMARY KEY(\"id\" AUTOINCREMENT) " +
                 ")";
 
-        String sq2 = "CREATE TABLE \"flashcard_bundle\" (   " +
+        boolean isUpdated = TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
+                appVersion, "flashcard", sql, "(id,term,translation,phonetic_notation," +
+                        "sound_id,at_created,at_updated,test,test2) select id,term,translation,phonetic_notation," +
+                        "sound_id,at_created,at_updated,test,test2");
+
+        sql = "CREATE TABLE \"flashcard_bundle\" (   " +
                 "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
                 "   \"name\"   TEXT NOT NULL UNIQUE,   " +
                 "   \"last_review_time\"   TEXT,   " +
@@ -77,15 +90,14 @@ public class MainActivity extends AppCompatActivity {
                 "   PRIMARY KEY(\"id\" AUTOINCREMENT)   " +
                 ")";
 
-        Connection connection = DBFactoryCreator.getFactory().getConnection();
-        
-        TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
-                appVersion, "flashcard", sql);
 
         TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
-                appVersion, "flashcard_bundle", sq2);
+                appVersion, "flashcard_bundle", sql, null);
+
 
         TableSchemaModifier.updateDBVersion(connection, appVersion);
+
+        System.out.println("xxx MA is table updated? " + isUpdated);
 
 
     }
@@ -95,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
         Flashcard flashcard = new Flashcard();
         int rnd = ((int) (Math.random() * 1000));
         flashcard.setTerm("apple" + rnd);
-        //flashcard.setTranslation("蘋果" + rnd);
+        flashcard.setTranslation("蘋果" + rnd);
         flashcard.setAtCreated("2023-07-02 23:12:22");
         flashcard.setAtUpdated("2023-07-02 23:12:22");
+
         try {
             dao.create(flashcard);
         } catch (SQLException e) {
@@ -129,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("xxx MA element:" + f.getTerm() + ", item=" + f + " , transation=" + f.getTranslation());
 
         }
-        System.out.println("xxx MA byId:" + byId);
+        //System.out.println("xxx MA byId:" + byId);
     }
 
 
