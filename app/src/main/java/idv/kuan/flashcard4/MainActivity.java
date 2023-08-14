@@ -15,7 +15,9 @@ import idv.kuan.flashcard4.dao.FlashcardDao;
 import idv.kuan.flashcard4.databases.models.Flashcard;
 import idv.kuan.kuanandroidlibs.databases.provider.AndroidDBFactory;
 import idv.kuan.libs.databases.DBFactoryCreator;
+import idv.kuan.libs.databases.utils.SchemaModifierExecutor;
 import idv.kuan.libs.databases.utils.TableSchemaModifier;
+import idv.kuan.libs.databases.utils.TableSchemaModifiers;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        changeTableStructure(versionCode);
+        changeTableStructure2(versionCode);
 
 
         //changeTableStructure();
@@ -52,6 +54,61 @@ public class MainActivity extends AppCompatActivity {
 
 
         //*/
+
+
+    }
+
+    private void changeTableStructure2(int appVersion) {
+        Connection connection = DBFactoryCreator.getFactory().getConnection();
+
+        String sql1 = "CREATE TABLE \"flashcard\" ( " +
+                " \"id\" INTEGER NOT NULL UNIQUE, " +
+                " \"term\" TEXT NOT NULL, " +
+                " \"translation\" TEXT NOT NULL, " +
+                " \"phonetic_notation\" TEXT, " +
+                " \"sound_id\" INTEGER, " +
+                " \"at_created\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                " \"at_updated\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                "\"test\" INTEGER, " +
+                "\"test2\" INTEGER, " +
+                "\"test3\" INTEGER NOT NULL DEFAULT 0, " +
+                "\"test4\" INTEGER NOT NULL DEFAULT 0, " +
+                " PRIMARY KEY(\"id\" AUTOINCREMENT) " +
+                ")";
+
+
+        String sql2 = "CREATE TABLE \"flashcard_bundle\" (   " +
+                "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
+                "   \"name\"   TEXT NOT NULL UNIQUE,   " +
+                "   \"last_review_time\"   TEXT,   " +
+                "   \"review_level\"   INTEGER NOT NULL DEFAULT 0,   " +
+                "   \"at_created\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   \"at_updated\"   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,   " +
+                "   PRIMARY KEY(\"id\" AUTOINCREMENT)   " +
+                ")";
+
+
+        TableSchemaModifier tableSchemaModifier = new TableSchemaModifier();
+
+        tableSchemaModifier.addSchemaModifierExecutor(new SchemaModifierExecutor() {
+            @Override
+            public void execute() {
+                TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
+                        appVersion, "flashcard", sql1, "(id,term,translation,phonetic_notation," +
+                                "sound_id,at_created,at_updated,test,test2) select id,term,translation,phonetic_notation," +
+                                "sound_id,at_created,at_updated,test,test2");
+            }
+        });
+
+        tableSchemaModifier.addSchemaModifierExecutor(new SchemaModifierExecutor() {
+            @Override
+            public void execute() {
+                TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
+                        appVersion, "flashcard_bundle", sql2, null);
+            }
+        });
+
+        tableSchemaModifier.updateDBVersion(connection, appVersion);
 
 
     }
@@ -75,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 " PRIMARY KEY(\"id\" AUTOINCREMENT) " +
                 ")";
 
-        boolean isUpdated = TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
+        boolean isUpdated = TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
                 appVersion, "flashcard", sql, "(id,term,translation,phonetic_notation," +
                         "sound_id,at_created,at_updated,test,test2) select id,term,translation,phonetic_notation," +
                         "sound_id,at_created,at_updated,test,test2");
@@ -91,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 ")";
 
 
-        TableSchemaModifier.createOrUpdateTableWithDataMigration(connection,
+        TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
                 appVersion, "flashcard_bundle", sql, null);
 
 
-        TableSchemaModifier.updateDBVersion(connection, appVersion);
+        TableSchemaModifiers.updateDBVersion(connection, appVersion);
 
         System.out.println("xxx MA is table updated? " + isUpdated);
 
