@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        changeTableStructure2(versionCode);
+        changeTableStructure(versionCode);
 
 
         //changeTableStructure();
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void changeTableStructure2(int appVersion) {
+    private void changeTableStructure(int appVersion) {
         Connection connection = DBFactoryCreator.getFactory().getConnection();
 
         String sql1 = "CREATE TABLE \"flashcard\" ( " +
@@ -69,10 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 " \"sound_id\" INTEGER, " +
                 " \"at_created\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
                 " \"at_updated\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-                "\"test\" INTEGER, " +
-                "\"test2\" INTEGER, " +
-                "\"test3\" INTEGER NOT NULL DEFAULT 0, " +
-                "\"test4\" INTEGER NOT NULL DEFAULT 0, " +
+                " \"testg\" INTEGER NOT NULL, " +
                 " PRIMARY KEY(\"id\" AUTOINCREMENT) " +
                 ")";
 
@@ -95,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
             public void execute() {
                 TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
                         appVersion, "flashcard", sql1, "(id,term,translation,phonetic_notation," +
-                                "sound_id,at_created,at_updated,test,test2) select id,term,translation,phonetic_notation," +
-                                "sound_id,at_created,at_updated,test,test2");
+                                "sound_id,at_created,at_updated,testg) select id,term,translation,phonetic_notation," +
+                                "sound_id,at_created,at_updated,COALESCE(testg, -9)");
             }
         });
 
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void changeTableStructure(int appVersion) {
+    private void changeTableStructureOld(int appVersion) {
         Connection connection = DBFactoryCreator.getFactory().getConnection();
 
         String sql = "CREATE TABLE \"flashcard\" ( " +
@@ -125,17 +124,14 @@ public class MainActivity extends AppCompatActivity {
                 " \"sound_id\" INTEGER, " +
                 " \"at_created\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
                 " \"at_updated\" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-                "\"test\" INTEGER, " +
-                "\"test2\" INTEGER, " +
-                "\"test3\" INTEGER NOT NULL DEFAULT 0, " +
-                "\"test4\" INTEGER NOT NULL DEFAULT 0, " +
+                " \"testr\" INTEGER, " +
                 " PRIMARY KEY(\"id\" AUTOINCREMENT) " +
                 ")";
 
         boolean isUpdated = TableSchemaModifiers.createOrUpdateTableWithDataMigration(connection,
                 appVersion, "flashcard", sql, "(id,term,translation,phonetic_notation," +
-                        "sound_id,at_created,at_updated,test,test2) select id,term,translation,phonetic_notation," +
-                        "sound_id,at_created,at_updated,test,test2");
+                        "sound_id,at_created,at_updated,testr) select id,term,translation,phonetic_notation," +
+                        "sound_id,at_created,at_updated,-1");
 
         sql = "CREATE TABLE \"flashcard_bundle\" (   " +
                 "   \"id\"   INTEGER NOT NULL UNIQUE,   " +
@@ -167,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         flashcard.setTranslation("蘋果" + rnd);
         flashcard.setAtCreated("2023-07-02 23:12:22");
         flashcard.setAtUpdated("2023-07-02 23:12:22");
+        flashcard.setTest((int) (Math.random()*100));
 
         try {
             dao.create(flashcard);
@@ -176,15 +173,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testQuery() {
+        FlashcardDao dao = new FlashcardDao();
+        List<Flashcard> list = new ArrayList<>();
+        try {
+            list = dao.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("xxx MA list:" + list.size());
+
+        for (Flashcard f : list) {
+            System.out.println("xxx MA element:item=" + f);
+
+        }
+
+
+    }
+
+    private void testQueryOld() {
 
 
         FlashcardDao dao = new FlashcardDao();
         Flashcard flashcard = new Flashcard();
-        flashcard.setId(3);
+        //flashcard.setId(3);
         Flashcard byId = null;
         List<Flashcard> list = new ArrayList<>();
         try {
-            byId = dao.findById(flashcard);
+            //byId = dao.findById(flashcard);
 
             list = dao.findAll();
         } catch (SQLException e) {

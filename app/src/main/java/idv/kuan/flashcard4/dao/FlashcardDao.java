@@ -29,6 +29,7 @@ public class FlashcardDao extends CommonDao<Flashcard> {
         entity.setTranslation(resultSet.getString("translation"));
         entity.setAtCreated(resultSet.getString("at_created"));
         entity.setAtUpdated(resultSet.getString("at_updated"));
+        entity.setTest(resultSet.getInt("testg"));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class FlashcardDao extends CommonDao<Flashcard> {
                 entity.getAtCreated().toString());
         builder.addColumnValue("at_updated", entity.getAtCreated() == null ? null :
                 entity.getAtUpdated().toString());
-
+        builder.addColumnValue("testg", entity.getTest());
     }
 
 

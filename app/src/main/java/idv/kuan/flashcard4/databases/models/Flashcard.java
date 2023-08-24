@@ -11,6 +11,7 @@ public class Flashcard implements CommonEntity {
     private String translation;
     private Timestamp atCreated;
     private Timestamp atUpdated;
+    private  Integer test;
 
     public Integer getId() {
         return id;
@@ -71,6 +72,14 @@ public class Flashcard implements CommonEntity {
         }
     }
 
+    public Integer getTest() {
+        return test;
+    }
+
+    public void setTest(Integer test) {
+        this.test = test;
+    }
+
     @Override
     public String toString() {
         return "Flashcard{" +
@@ -79,6 +88,10 @@ public class Flashcard implements CommonEntity {
                 ", translation='" + translation + '\'' +
                 ", atCreated=" + atCreated +
                 ", atUpdated=" + atUpdated +
+                ", test=" + test +
                 '}';
     }
+
+
+
 }
