@@ -14,7 +14,10 @@
         android:theme="@style/Theme.Flashcard4"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activites.FCMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activites.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

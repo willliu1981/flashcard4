@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.8">
+      <module name="Flashcard4.ab" target="11" />
+      <module name="Flashcard4.abm" target="11" />
+      <module name="Flashcard4.app" target="11" />
+      <module name="Flashcard4.app.kuancommonlib" target="11" />
+      <module name="Flashcard4.kuanandroidlibs" target="11" />
+      <module name="Kuanlibs.Flashcard4.kuanandroidlibs" target="11" />
+      <module name="T1.Flashcard4.abm" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

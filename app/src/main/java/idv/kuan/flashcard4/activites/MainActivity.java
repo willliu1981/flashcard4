@@ -1,4 +1,4 @@
-package idv.kuan.flashcard4;
+package idv.kuan.flashcard4.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +15,7 @@ import java.util.List;
 
 import idv.kuan.flashcard4.dao.FlashcardDao;
 import idv.kuan.flashcard4.databases.models.Flashcard;
+import idv.kuan.kuanandroidlibs.activites.ProxyMainActivity;
 import idv.kuan.kuanandroidlibs.databases.provider.AndroidDBFactory;
 import idv.kuan.libs.databases.DBFactoryCreator;
 import idv.kuan.libs.databases.utils.SchemaModifierExecutor;
@@ -22,12 +23,17 @@ import idv.kuan.libs.databases.utils.TableSchemaModifier;
 import idv.kuan.libs.databases.utils.TableSchemaModifiers;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ProxyMainActivity {
+
+
+    @Override
+    public <A extends AppCompatActivity> Class<A> getTargetActivityClass() {
+        return (Class<A>) FCMainActivity.class;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
 
         DBFactoryCreator.getFactory(new AndroidDBFactory(this)).config("android1", "fc4.db", "fc4.db");
@@ -59,6 +65,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    /******************
+     新的語句
+     INSERT INTO flashcard (id, term, translation, phonetic_notation, sound_id, at_created, at_updated, col1)
+     SELECT
+     id,
+     term,
+     translation,
+     phonetic_notation,
+     sound_id,
+     at_created,
+     at_updated,
+     CASE
+     WHEN EXISTS (SELECT 1 FROM flashcard__old LIMIT 1) AND col1 IS NOT NULL THEN col1
+     ELSE DEFAULT_VALUE_FOR_COL1  -- 請替換為預設值或 NULL
+     END AS col1
+     FROM flashcard__old;
+
+
+     */
 
     private void changeTableStructure(int appVersion) {
         Connection connection = DBFactoryCreator.getFactory().getConnection();
@@ -163,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         flashcard.setTranslation("蘋果" + rnd);
         flashcard.setAtCreated("2023-07-02 23:12:22");
         flashcard.setAtUpdated("2023-07-02 23:12:22");
-        flashcard.setTest((int) (Math.random()*100));
+        flashcard.setTest((int) (Math.random() * 100));
 
         try {
             dao.create(flashcard);
